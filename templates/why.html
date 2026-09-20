@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Why Hire Me — {{ profile.alias }}{% endblock %}
+{% block content %}
+
+<section class="section-head">
+  <h1>Why Hire Me</h1>
+  <p>No overselling — just what the work shows, including how it gets built.</p>
+</section>
+
+<section class="reason-list">
+  {% for r in reasons %}
+  <div class="reason-card">
+    <h2>{{ r.title }}</h2>
+    <p>{{ r.desc }}</p>
+  </div>
+  {% endfor %}
+</section>
+
+{% endblock %}

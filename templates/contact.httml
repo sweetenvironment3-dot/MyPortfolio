@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Contact — {{ profile.alias }}{% endblock %}
+{% block content %}
+
+<section class="section-head">
+  <h1>Leave a Comment</h1>
+  <p>Drop your name and a note — it'll appear below for everyone to see. Adding your WhatsApp number is optional.</p>
+</section>
+
+<a class="wa-card" href="{{ profile.whatsapp_url }}" target="_blank" rel="noopener noreferrer">
+  <span class="wa-card-label">Prefer to talk directly?</span>
+  <span class="wa-card-number">{{ profile.whatsapp_display }}</span>
+  <span class="wa-card-cta">Chat with me on WhatsApp</span>
+</a>
+
+<section class="comment-form-wrap">
+  <form id="comment-form" class="comment-form">
+    <label>
+      Name
+      <input type="text" name="name" required maxlength="80" placeholder="Your name">
+    </label>
+    <div class="field">
+      <label for="wa-phone">WhatsApp number <span class="optional">(optional)</span></label>
+      <div class="phone-row">
+        <select name="country_code" id="wa-country" aria-label="Country code">
+          <optgroup label="Common">
+            {% for name, code in common_countries %}
+            <option value="{{ code }}"{% if code == default_code and loop.first %} selected{% endif %}>{{ name }} (+{{ code }})</option>
+            {% endfor %}
+          </optgroup>
+          <optgroup label="All countries">
+            {% for name, code in other_countries %}
+            <option value="{{ code }}">{{ name }} (+{{ code }})</option>
+            {% endfor %}
+          </optgroup>
+        </select>
+        <input type="tel" name="phone" id="wa-phone" inputmode="tel" autocomplete="tel-national" maxlength="20" placeholder="904 425 6369">
+      </div>
+    </div>
+    <label>
+      Comment
+      <textarea name="message" required maxlength="500" rows="4" placeholder="Say something..."></textarea>
+    </label>
+    <button type="submit" class="btn btn-gold">Post Comment</button>
+    <p class="form-status" id="form-status"></p>
+  </form>
+</section>
+
+<section class="section">
+  <h2>Comments</h2>
+  <div class="comment-list" id="comment-list">
+    {% for c in comments %}
+    <div class="comment-card">
+      <div class="comment-head">
+        <span class="comment-name">{{ c.name }}</span>
+        {% if c.wa_url %}
+        <a class="comment-phone wa-link" href="{{ c.wa_url }}" target="_blank" rel="noopener noreferrer" title="Chat on WhatsApp">{{ c.whatsapp }}</a>
+        {% elif c.whatsapp %}
+        <span class="comment-phone">{{ c.whatsapp }}</span>
+        {% endif %}
+      </div>
+      <p class="comment-message">{{ c.message }}</p>
+    </div>
+    {% else %}
+    <p class="muted">No comments yet — be the first.</p>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

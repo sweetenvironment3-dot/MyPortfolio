@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Skills — {{ profile.alias }}{% endblock %}
+{% block content %}
+
+<section class="section-head">
+  <h1>Stacks &amp; Skills</h1>
+  <p>Everything below has shipped in a real product, not just a tutorial.</p>
+  <p class="build-note">{{ profile.how_i_build }}</p>
+</section>
+
+<section class="skills-grid">
+  {% for group in groups %}
+  <div class="skill-card{% if group.main %} main{% elif group.also %} also{% endif %}">
+    {% if group.main %}<span class="main-tag">Main stack</span>{% elif group.also %}<span class="main-tag alt">Also good at</span>{% endif %}
+    <h2>{{ group.title }}</h2>
+    <ul>
+      {% for item in group.skills %}
+      <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+</section>
+
+{% endblock %}

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0a08">
+<title>{% block title %}MyPortfolio — {{ profile.alias }}{% endblock %}</title>
+<meta name="description" content="{{ profile.name }} ({{ profile.alias }}): {{ profile.title }}. {{ profile.experience_badge }}.">
+
+<!-- Link previews when the app is shared -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MyPortfolio">
+<meta property="og:title" content="{{ profile.name }} — {{ profile.alias }} | MyPortfolio">
+<meta property="og:description" content="{{ profile.title }}. {{ profile.experience_badge }}.">
+<meta property="og:url" content="{{ request.url }}">
+<meta property="og:image" content="{{ url_for('static', filename='images/profile.jpg', _external=True) }}">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- PWA -->
+<link rel="manifest" href="{{ url_for('manifest') }}">
+<link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('icon', size='192x192') }}">
+<link rel="apple-touch-icon" href="{{ url_for('icon', size='192x192') }}">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MyPortfolio">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css', v=3) }}">
+</head>
+<body data-page="{{ request.endpoint or '' }}" data-share-title="{{ profile.name }} — {{ profile.alias }} | MyPortfolio" data-share-text="{{ profile.share_text }}">
+
+<div class="bg-photo"></div>
+<div class="bg-overlay"></div>
+
+<header class="site-header">
+  <a class="brand" href="{{ url_for('home') }}">
+    <span class="brand-mark">MyPortfolio</span>
+    <span class="brand-sub">{{ profile.alias }} · {{ profile.brand }}</span>
+  </a>
+
+  <div class="live-badge" id="live-badge" title="People on this site right now">
+    <span class="live-dot"></span>
+    <span id="live-count">0</span> live
+  </div>
+
+  <span class="lamp-spacer" aria-hidden="true"></span>
+</header>
+
+<!-- Pull-rope lamp: drag the rope down to switch the screen dark and open the menu -->
+<div class="lamp" id="lamp">
+  <svg viewBox="0 0 64 150" width="64" height="150" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="shadeGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#f0d27a"/>
+        <stop offset="1" stop-color="#8a6b18"/>
+      </linearGradient>
+      <linearGradient id="knobGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#ffe9a8"/>
+        <stop offset="1" stop-color="#b8901f"/>
+      </linearGradient>
+    </defs>
+    <line class="lamp-wire" x1="32" y1="0" x2="32" y2="14"/>
+    <rect class="lamp-cap" x="27" y="10" width="10" height="7" rx="2"/>
+    <path class="lamp-shade" d="M32 15 C43 15 47 27 55 47 L9 47 C17 27 21 15 32 15 Z" fill="url(#shadeGrad)"/>
+    <ellipse class="lamp-bulb" cx="32" cy="48" rx="9" ry="6"/>
+    <line class="rope" id="rope-line" x1="32" y1="52" x2="32" y2="86"/>
+    <circle class="knob" id="rope-knob" cx="32" cy="90" r="6" fill="url(#knobGrad)"/>
+  </svg>
+  <button type="button" class="lamp-grab" id="lamp-grab" aria-controls="nav-drawer" aria-expanded="false"
+          aria-label="Lamp rope. Drag it down to open the menu (or press Enter)"></button>
+</div>
+
+<div class="lamp-hint" id="lamp-hint" aria-hidden="true">
+  <span class="hint-title">Drag the rope down<i class="hint-arrow"></i></span>
+  <span class="hint-sub">to open the menu</span>
+</div>
+
+<div class="lamp-dark" id="lamp-dark"></div>
+
+<nav class="float-menu" id="nav-drawer" aria-label="Main menu" aria-hidden="true">
+  <div class="float-inner">
+    {% set links = [
+      ('home', 'Home'), ('skills', 'Skills'), ('projects', 'Projects'), ('cv', 'CV'),
+      ('why_hire_me', 'Why Hire Me'), ('traits', 'Traits'), ('contact', 'Contact'), ('live', 'Live Visitors')
+    ] %}
+    {% for endpoint, label in links %}
+    <div class="float-item" style="--i: {{ loop.index0 }}">
+      <a class="float-card{% if request.endpoint == endpoint %} active{% endif %}" href="{{ url_for(endpoint) }}"{% if request.endpoint == endpoint %} aria-current="page"{% endif %}>{{ label }}</a>
+    </div>
+    {% endfor %}
+
+    <div class="float-item" style="--i: 8">
+      <button type="button" class="float-card float-action" data-share>Share this app</button>
+    </div>
+    <div class="float-item" id="install-item" style="--i: 9" hidden>
+      <button type="button" class="float-card float-action" id="install-btn">Install app</button>
+    </div>
+
+    <p class="float-tip">Drag the rope down again to switch the light back on.</p>
+  </div>
+</nav>
+
+<main class="page">
+{% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <p>{{ profile.name }} — {{ profile.alias }} · {{ profile.location }}</p>
+  <p><a href="{{ profile.whatsapp_url }}" target="_blank" rel="noopener noreferrer">WhatsApp {{ profile.whatsapp_display }}</a> · <a href="#" data-share>Share this app</a></p>
+  <p class="muted">Built with Flask, PostgreSQL, SQLite3, HTML, CSS &amp; JavaScript. Backend built by me, end to end; frontend built by an AI I built myself.</p>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="page-veil" id="page-veil"></div>
+
+<!-- Install pop-up: shown automatically when the browser allows installing (Chrome, Edge, Samsung, Android, PC)
+     or, on iPhone/iPad, with the "Add to Home Screen" steps -->
+<div class="install-popup" id="install-popup" role="dialog" aria-labelledby="install-title" hidden>
+  <img class="install-icon" src="{{ url_for('icon', size='192x192') }}" alt="" width="52" height="52">
+  <div class="install-copy">
+    <strong id="install-title">Install MyPortfolio</strong>
+    <p class="install-text-prompt">Add it to your home screen or desktop for one-tap access, even offline.</p>
+    <p class="install-text-ios">Tap the <b>Share</b> button in your browser, then choose <b>Add to Home Screen</b>.</p>
+  </div>
+  <div class="install-actions">
+    <button type="button" class="install-accept" id="install-accept">Install</button>
+    <button type="button" class="install-dismiss" id="install-dismiss">Not now</button>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js', v=3) }}"></script>
+</body>
+</html>

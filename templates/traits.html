@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Traits — {{ profile.alias }}{% endblock %}
+{% block content %}
+
+<section class="section-head">
+  <h1>Traits</h1>
+  <p>How I actually work, day to day.</p>
+</section>
+
+<section class="trait-grid full">
+  {% for t in traits %}
+  <div class="trait-card">
+    <h3>{{ t.name }}</h3>
+    <p>{{ t.desc }}</p>
+  </div>
+  {% endfor %}
+</section>
+
+<section class="section">
+  <h2>Confirm these traits</h2>
+  <p>Reach out to any of the people below on WhatsApp — they know me well and can speak to how I actually am to work with.</p>
+  <div class="reference-list">
+    {% for ref in references %}
+    <a class="reference-card" href="https://wa.me/{{ ref.wa }}" target="_blank" rel="noopener noreferrer">
+      <span class="reference-role">{{ ref.role }}</span>
+      <span class="reference-phone">{{ ref.phone }}</span>
+      <span class="reference-cta">Message on WhatsApp</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

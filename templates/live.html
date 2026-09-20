@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Live Visitors — {{ profile.alias }}{% endblock %}
+{% block content %}
+
+<section class="section-head">
+  <h1>Live Visitors</h1>
+  <p>Everyone currently on the site, and how long they've stuck around. Updates automatically — visible to all.</p>
+</section>
+
+<section class="section">
+  <div class="live-summary">
+    <span class="live-dot"></span>
+    <span id="live-total-count">0</span> people here right now
+  </div>
+  <div class="live-list" id="live-list"></div>
+</section>
+
+{% endblock %}

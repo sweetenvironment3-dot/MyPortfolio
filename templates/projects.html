@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Projects — {{ profile.alias }}{% endblock %}
+{% block content %}
+
+<section class="section-head">
+  <h1>Projects &amp; Repositories</h1>
+  <p>A year of building and shipping, repo by repo.</p>
+  <p class="build-note">{{ profile.how_i_build }}</p>
+</section>
+
+<section class="project-list">
+  {% for p in projects %}
+  <a class="project-card" href="{{ p.url }}" target="_blank" rel="noopener noreferrer">
+    <div>
+      <h2>{{ p.name }}</h2>
+      <p>{{ p.desc }}</p>
+    </div>
+    <span class="project-link">View on GitHub</span>
+  </a>
+  {% endfor %}
+</section>
+
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}MyPortfolio — {{ profile.alias }}{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="hero-portrait">
+    <img src="{{ url_for('static', filename='images/profile.jpg') }}" alt="{{ profile.name }}">
+  </div>
+  <div class="hero-text">
+    <p class="eyebrow-free">{{ profile.title }}</p>
+    <h1>{{ profile.name }}<span class="hero-alias">"{{ profile.alias }}"</span></h1>
+    <p class="hero-tagline">{{ profile.tagline }}</p>
+    <p class="hero-intro">{{ profile.intro }}</p>
+    <div class="hero-meta">
+      <span>{{ profile.location }}</span>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><strong>1</strong><span>Year of experience</span></div>
+      <div class="stat"><strong>{{ project_count }}</strong><span>Projects</span></div>
+    </div>
+    <div class="main-stacks">
+      <span class="main-stacks-label">Main stacks</span>
+      {% for stack in profile.main_stacks %}
+      <span class="stack-chip">{{ stack }}</span>
+      {% endfor %}
+    </div>
+    <div class="main-stacks also">
+      <span class="main-stacks-label">Also good at</span>
+      {% for stack in profile.also_good_at %}
+      <span class="stack-chip alt">{{ stack }}</span>
+      {% endfor %}
+    </div>
+    <div class="hero-actions">
+      <a class="btn btn-gold" href="{{ url_for('cv') }}">View CV</a>
+      <a class="btn btn-outline" href="{{ url_for('projects') }}">See Projects</a>
+      <a class="btn btn-wa" href="{{ profile.whatsapp_url }}" target="_blank" rel="noopener noreferrer">WhatsApp me</a>
+      <button type="button" class="btn btn-outline" data-share>Share</button>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <h2>What people find, up front</h2>
+  <div class="trait-grid">
+    {% for t in traits %}
+    <div class="trait-card">
+      <h3>{{ t.name }}</h3>
+      <p>{{ t.desc }}</p>
+    </div>
+    {% endfor %}
+  </div>
+  <a class="link-more" href="{{ url_for('traits') }}">See all traits &amp; how to confirm them</a>
+</section>
+
+<section class="section how-i-build">
+  <h2>How I build</h2>
+  <p>{{ profile.how_i_build }}</p>
+</section>
+
+<section class="section split">
+  <div>
+    <h2>Flagship build</h2>
+    <p>Consistency is a live-streaming platform for tutoring tech students. Tutors go live, students join and chat in real time, with a gift economy and an admin panel behind it.</p>
+    <a class="link-more" href="{{ url_for('projects') }}">Browse the repos</a>
+  </div>
+  <div>
+    <h2>Ready to work</h2>
+    <p>One year of continuous shipping, a working production stack, and a clear answer to why this is worth your time — laid out plainly, no overselling.</p>
+    <a class="link-more" href="{{ url_for('why_hire_me') }}">Why hire me</a>
+  </div>
+</section>
+
+{% endblock %}
