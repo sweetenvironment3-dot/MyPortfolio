@@ -1,0 +1,15 @@
+# Local production-style run:  docker compose up --build   ->  http://localhost:3000
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      SECRET_KEY: ${SECRET_KEY:-}
+      TRUST_PROXY: ${TRUST_PROXY:-0}
+    volumes:
+      - portfolio-data:/data
+    restart: unless-stopped
+
+volumes:
+  portfolio-data:
